@@ -36,7 +36,7 @@ export function Header() {
                     <Link href="/" className="text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
                         Home
                     </Link>
-                    <Link href="/#services" className="text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
+                    <Link href="/services" className="text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
                         Services
                     </Link>
                     <Link href="/fleet" className="text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
@@ -67,7 +67,7 @@ export function Header() {
                         <SheetContent side="right" className="bg-black/95 border-l border-white/10 text-white w-[300px]">
                             <div className="flex flex-col gap-8 mt-10">
                                 <Link href="/" className="text-lg uppercase tracking-widest hover:text-primary">Home</Link>
-                                <Link href="/#services" className="text-lg uppercase tracking-widest hover:text-primary">Services</Link>
+                                <Link href="/services" className="text-lg uppercase tracking-widest hover:text-primary">Services</Link>
                                 <Link href="/fleet" className="text-lg uppercase tracking-widest hover:text-primary">Fleet</Link>
                                 <Link href="/about" className="text-lg uppercase tracking-widest hover:text-primary">About</Link>
                                 <Link href="/login" className="text-lg uppercase tracking-widest hover:text-primary">Log In</Link>
