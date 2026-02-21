@@ -2,8 +2,9 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ValuesSection } from "@/components/sections/ValuesSection";
 import Image from "next/image";
-import { Globe, Users, Award, ShieldCheck, Target, Eye, Calendar, Sparkles } from "lucide-react";
+import { Globe, ShieldCheck, Target, Eye } from "lucide-react";
 import { Counter } from "@/components/ui/Counter";
+import { TimelineSection } from "@/components/sections/TimelineSection";
 
 export default function AboutPage() {
     return (
@@ -138,55 +139,8 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Timeline Section */}
-            <section className="py-32 container mx-auto px-6">
-                <div className="text-center mb-20">
-                    <h2 className="text-gold-primary text-sm font-bold uppercase tracking-[0.3em] mb-4">The Journey</h2>
-                    <h3 className="text-5xl font-heading font-bold">Milestones of Success</h3>
-                </div>
-
-                <div className="relative max-w-5xl mx-auto space-y-24 before:absolute before:inset-y-0 before:left-1/2 before:-translate-x-1/2 before:w-px before:bg-gradient-to-b before:from-transparent before:via-gold-primary/30 before:to-transparent">
-                    {/* Item 1 */}
-                    <div className="relative flex items-center justify-between group">
-                        <div className="w-[45%] text-right space-y-2 pr-12">
-                            <h5 className="text-gold-primary font-bold text-2xl font-heading tracking-widest">2010</h5>
-                            <p className="text-zinc-400">Founded in London with a single flagship S-Class sedan.</p>
-                        </div>
-                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gold-primary shadow-[0_0_15px_rgba(234,179,8,0.5)] z-10" />
-                        <div className="w-[45%] pl-12" />
-                    </div>
-
-                    {/* Item 2 */}
-                    <div className="relative flex items-center justify-between group">
-                        <div className="w-[45%] pr-12" />
-                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-zinc-800 border-2 border-gold-primary/50 group-hover:bg-gold-primary transition-colors z-10" />
-                        <div className="w-[45%] space-y-2 pl-12">
-                            <h5 className="text-gold-primary font-bold text-2xl font-heading tracking-widest">2015</h5>
-                            <p className="text-zinc-400">Expansion into Europe and implementation of our first customized fleet management software.</p>
-                        </div>
-                    </div>
-
-                    {/* Item 3 */}
-                    <div className="relative flex items-center justify-between group">
-                        <div className="w-[45%] text-right space-y-2 pr-12">
-                            <h5 className="text-gold-primary font-bold text-2xl font-heading tracking-widest">2019</h5>
-                            <p className="text-zinc-400">Reached 50 cities milestone and introduced electric luxury fleet options.</p>
-                        </div>
-                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-zinc-800 border-2 border-gold-primary/50 group-hover:bg-gold-primary transition-colors z-10" />
-                        <div className="w-[45%] pl-12" />
-                    </div>
-
-                    {/* Item 4 */}
-                    <div className="relative flex items-center justify-between group">
-                        <div className="w-[45%] pr-12" />
-                        <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gold-primary shadow-[0_0_15px_rgba(234,179,8,0.5)] z-10" />
-                        <div className="w-[45%] space-y-2 pl-12">
-                            <h5 className="text-gold-primary font-bold text-2xl font-heading tracking-widest">2024</h5>
-                            <p className="text-zinc-400">Pioneering AI-driven route optimization and private jet lounge transfers globally.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* Timeline Section (Interactive) */}
+            <TimelineSection />
 
             <ValuesSection />
             <Footer />
