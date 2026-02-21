@@ -1,23 +1,30 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
+// The client you created in Step 2
+import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url);
-    const code = searchParams.get("code");
+    const { searchParams, origin } = new URL(request.url)
+    const code = searchParams.get('code')
     // if "next" is in search params, use it as the redirection URL
-    const next = searchParams.get("next") ?? "/";
+    const next = searchParams.get('next') ?? '/'
 
     if (code) {
-        const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        );
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        const supabase = await createClient()
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
-            return NextResponse.redirect(`${origin}${next}`);
+            const forwardedHost = request.headers.get('x-forwarded-host') // if this is present, this means the app is deployed on Vercel
+            const isLocalEnv = process.env.NODE_ENV === 'development'
+            if (isLocalEnv) {
+                // we can skip the check as long as we're in a local dev environment
+                return NextResponse.redirect(`${origin}${next}`)
+            } else if (forwardedHost) {
+                return NextResponse.redirect(`https://${forwardedHost}${next}`)
+            } else {
+                return NextResponse.redirect(`${origin}${next}`)
+            }
         }
     }
 
     // return the user to an error page with instructions
-    return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`);
+    return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`)
 }

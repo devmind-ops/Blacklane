@@ -1,7 +1,7 @@
 'use server';
 
 import { Client } from "@googlemaps/google-maps-services-js";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 const client = new Client({});
 
@@ -15,13 +15,14 @@ export async function calculateTripPrice(
     durationHours?: number
 ) {
     try {
+        const supabase = await createClient();
         // 1. Fetch fleet rates from DB
         const { data: fleet, error: fleetError } = await supabase
             .from("fleet")
             .select("*")
             .eq("category", vehicleCategory)
             .single();
-
+        // ... (rest of the logic remains the same)
         if (fleetError || !fleet) {
             console.error("Fleet lookup failed:", fleetError);
             return { error: "Vehicle type not found" };
@@ -89,9 +90,15 @@ export async function createBooking(bookingData: {
     }
 }) {
     try {
+        const supabase = await createClient();
+
+        // Optionally attach user_id if logged in
+        const { data: { user } } = await supabase.auth.getUser();
+        const finalData = user ? { ...bookingData, user_id: user.id } : bookingData;
+
         const { data, error } = await supabase
             .from("bookings")
-            .insert([bookingData])
+            .insert([finalData])
             .select()
             .single();
 

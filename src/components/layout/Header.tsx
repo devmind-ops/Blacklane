@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { signOut } from "@/actions/auth";
 
 export function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [user, setUser] = useState<any>(null);
+    const supabase = createClient();
 
     useEffect(() => {
         const handleScroll = () => {

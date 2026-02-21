@@ -1,8 +1,9 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
 
 export async function getFleet() {
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from("fleet")
         .select("*")
@@ -17,6 +18,7 @@ export async function getFleet() {
 }
 
 export async function getFleetByCategory(category: string) {
+    const supabase = await createClient();
     const { data, error } = await supabase
         .from("fleet")
         .select("*")
