@@ -10,8 +10,41 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Clock, Flag, Loader2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { calculateTripPrice, createBooking } from "@/actions/booking";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+
+const LIBRARIES: ("places")[] = ["places"];
 
 function BookingWidgetContent() {
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+        libraries: LIBRARIES,
+    });
+
+    const [pickupAutocomplete, setPickupAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+    const [dropoffAutocomplete, setDropoffAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+
+    const onPickupLoad = (autocomplete: google.maps.places.Autocomplete) => {
+        setPickupAutocomplete(autocomplete);
+    };
+
+    const onDropoffLoad = (autocomplete: google.maps.places.Autocomplete) => {
+        setDropoffAutocomplete(autocomplete);
+    };
+
+    const onPickupPlaceChanged = () => {
+        if (pickupAutocomplete !== null) {
+            const place = pickupAutocomplete.getPlace();
+            if (place.formatted_address) setPickup(place.formatted_address);
+        }
+    };
+
+    const onDropoffPlaceChanged = () => {
+        if (dropoffAutocomplete !== null) {
+            const place = dropoffAutocomplete.getPlace();
+            if (place.formatted_address) setDropoff(place.formatted_address);
+        }
+    };
+
     const searchParams = useSearchParams();
     const [bookingType, setBookingType] = useState<"one-way" | "hourly">("one-way");
     const [isPending, startTransition] = useTransition();
@@ -160,13 +193,25 @@ function BookingWidgetContent() {
                             <div className="space-y-2">
                                 <Label className="text-xs uppercase tracking-widest text-muted-foreground">Pickup Location</Label>
                                 <div className="relative">
-                                    <MapPin className="absolute left-3 top-3 h-5 w-5 text-primary" />
-                                    <Input
-                                        value={pickup}
-                                        onChange={(e) => setPickup(e.target.value)}
-                                        className="pl-10 bg-white/5 border-white/10 text-white h-12"
-                                        placeholder="Address, Airport, or Hotel"
-                                    />
+                                    <MapPin className="absolute left-3 top-3 h-5 w-5 text-primary z-10" />
+                                    {isLoaded ? (
+                                        <Autocomplete onLoad={onPickupLoad} onPlaceChanged={onPickupPlaceChanged}>
+                                            <Input
+                                                value={pickup}
+                                                onChange={(e) => setPickup(e.target.value)}
+                                                className="pl-10 bg-white/5 border-white/10 text-white h-12"
+                                                placeholder="Address, Airport, or Hotel"
+                                            />
+                                        </Autocomplete>
+                                    ) : (
+                                        <Input
+                                            value={pickup}
+                                            onChange={(e) => setPickup(e.target.value)}
+                                            className="pl-10 bg-white/5 border-white/10 text-white h-12"
+                                            placeholder="Loading maps..."
+                                            disabled
+                                        />
+                                    )}
                                 </div>
                             </div>
 
@@ -174,13 +219,25 @@ function BookingWidgetContent() {
                                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <Label className="text-xs uppercase tracking-widest text-muted-foreground">Drop-off Location</Label>
                                     <div className="relative">
-                                        <Flag className="absolute left-3 top-3 h-5 w-5 text-primary" />
-                                        <Input
-                                            value={dropoff}
-                                            onChange={(e) => setDropoff(e.target.value)}
-                                            className="pl-10 bg-white/5 border-white/10 text-white h-12"
-                                            placeholder="Destination address"
-                                        />
+                                        <Flag className="absolute left-3 top-3 h-5 w-5 text-primary z-10" />
+                                        {isLoaded ? (
+                                            <Autocomplete onLoad={onDropoffLoad} onPlaceChanged={onDropoffPlaceChanged}>
+                                                <Input
+                                                    value={dropoff}
+                                                    onChange={(e) => setDropoff(e.target.value)}
+                                                    className="pl-10 bg-white/5 border-white/10 text-white h-12"
+                                                    placeholder="Destination address"
+                                                />
+                                            </Autocomplete>
+                                        ) : (
+                                            <Input
+                                                value={dropoff}
+                                                onChange={(e) => setDropoff(e.target.value)}
+                                                className="pl-10 bg-white/5 border-white/10 text-white h-12"
+                                                placeholder="Loading maps..."
+                                                disabled
+                                            />
+                                        )}
                                     </div>
                                 </div>
                             )}
