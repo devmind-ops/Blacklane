@@ -79,18 +79,18 @@ export function TimelineSection() {
                 {/* The Vertical Line */}
                 <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-gradient-to-b from-transparent via-gold-primary/20 to-transparent" />
 
-                {/* The Flying Cursor */}
-                <div
-                    className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-gold-primary z-20 shadow-[0_0_25px_rgba(234,179,8,0.8)] transition-all duration-300 ease-out"
-                    style={{
-                        top: `${cursorTop}px`,
-                        transform: `translate(-50%, -50%) scale(${activeIndex % 2 === 0 ? 1.2 : 1})`
-                    }}
-                >
-                    <div className="absolute inset-0 rounded-full animate-ping bg-gold-primary opacity-20" />
-                </div>
-
                 <div className="space-y-32 relative">
+                    {/* The Flying Cursor */}
+                    <div
+                        className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-gold-primary z-20 shadow-[0_0_25px_rgba(234,179,8,0.8)] transition-all duration-300 ease-out"
+                        style={{
+                            top: `${cursorTop}px`,
+                            transform: `translate(-50%, -50%) scale(${activeIndex % 2 === 0 ? 1.2 : 1})`
+                        }}
+                    >
+                        <div className="absolute inset-0 rounded-full animate-ping bg-gold-primary opacity-20" />
+                    </div>
+
                     {milestones.map((item, index) => (
                         <div
                             key={index}
