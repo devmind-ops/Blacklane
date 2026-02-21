@@ -32,6 +32,8 @@ create table bookings (
   calculated_price numeric,
   status text default 'pending', -- 'pending', 'confirmed', 'completed', 'cancelled'
   customer_details jsonb, -- { "name": "...", "email": "...", "phone": "..." }
+  flight_number text,
+  notes text,
   created_at timestamp with time zone default now()
 );
 

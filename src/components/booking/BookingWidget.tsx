@@ -52,29 +52,17 @@ function BookingWidgetContent() {
             return;
         }
 
-        startTransition(async () => {
-            const result = await calculateTripPrice(
-                pickup,
-                dropoff,
-                date,
-                time,
-                vehicleCategory,
-                bookingType,
-                bookingType === 'hourly' ? parseInt(duration) : undefined
-            );
-
-            if (result.price) {
-                setTripDetails({
-                    price: result.price,
-                    distance: result.distance,
-                    duration: result.duration,
-                    vehicleId: result.vehicleId || ""
-                });
-                setStep("confirm");
-            } else {
-                alert(result.error || "Could not calculate price.");
-            }
+        const params = new URLSearchParams({
+            pickup,
+            dropoff: bookingType === 'one-way' ? dropoff : 'As Directed',
+            date,
+            time,
+            type: bookingType,
+            vehicle: vehicleCategory,
+            duration: bookingType === 'hourly' ? duration : ""
         });
+
+        window.location.href = `/booking?${params.toString()}`;
     };
 
     const handleConfirmBooking = () => {

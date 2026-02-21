@@ -87,7 +87,9 @@ export async function createBooking(bookingData: {
         name: string;
         email: string;
         phone: string;
-    }
+    },
+    flight_number?: string;
+    notes?: string;
 }) {
     try {
         const supabase = await createClient();
@@ -135,5 +137,33 @@ export async function getUserBookings() {
     } catch (e) {
         console.error("Failed to fetch user bookings:", e);
         return [];
+    }
+}
+
+export async function calculateAllVehiclePrices(
+    pickup: string,
+    dropoff: string,
+    date: string,
+    time: string,
+    bookingType: 'one-way' | 'hourly',
+    durationHours?: number
+) {
+    try {
+        const categories: ('sedan' | 'van' | 'first')[] = ['sedan', 'van', 'first'];
+
+        const results = await Promise.all(
+            categories.map(category =>
+                calculateTripPrice(pickup, dropoff, date, time, category, bookingType, durationHours)
+            )
+        );
+
+        return {
+            sedan: results[0],
+            van: results[1],
+            first: results[2]
+        };
+    } catch (e) {
+        console.error("Bulk price calculation failed:", e);
+        return { error: "Could not calculate all prices" };
     }
 }
