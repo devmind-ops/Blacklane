@@ -4,18 +4,35 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
+import { signOut } from "@/actions/auth";
 
 export function Header() {
     const [scrolled, setScrolled] = useState(false);
+    const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+
+        // Check active session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+        });
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            subscription.unsubscribe();
+        };
     }, []);
 
     return (
@@ -45,15 +62,34 @@ export function Header() {
                     <Link href="/about" className="text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
                         About
                     </Link>
-                    <Link href="/login" className="text-sm uppercase tracking-widest text-gold-light hover:text-white transition-colors">
-                        Log In
-                    </Link>
-                    <Button
-                        asChild
-                        className="bg-gold-gradient text-black hover:text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform"
-                    >
-                        <Link href="/register">Sign Up</Link>
-                    </Button>
+
+                    {user ? (
+                        <div className="flex items-center gap-6">
+                            <Link href="/account" className="flex items-center gap-2 text-sm uppercase tracking-widest text-gold-light hover:text-white transition-colors">
+                                <User className="w-4 h-4" />
+                                Account
+                            </Link>
+                            <button
+                                onClick={() => signOut()}
+                                className="flex items-center gap-2 text-sm uppercase tracking-widest text-white/60 hover:text-red-400 transition-colors"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-8">
+                            <Link href="/login" className="text-sm uppercase tracking-widest text-gold-light hover:text-white transition-colors">
+                                Log In
+                            </Link>
+                            <Button
+                                asChild
+                                className="bg-gold-gradient text-black hover:text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform"
+                            >
+                                <Link href="/register">Sign Up</Link>
+                            </Button>
+                        </div>
+                    )}
                 </nav>
 
                 {/* Mobile Nav */}
@@ -70,10 +106,27 @@ export function Header() {
                                 <Link href="/services" className="text-lg uppercase tracking-widest hover:text-primary">Services</Link>
                                 <Link href="/fleet" className="text-lg uppercase tracking-widest hover:text-primary">Fleet</Link>
                                 <Link href="/about" className="text-lg uppercase tracking-widest hover:text-primary">About</Link>
-                                <Link href="/login" className="text-lg uppercase tracking-widest hover:text-primary">Log In</Link>
-                                <Link href="/register" className="mt-4">
-                                    <Button className="w-full bg-gold-gradient text-black font-bold uppercase">Sign Up</Button>
-                                </Link>
+
+                                <div className="h-px bg-white/10 my-2" />
+
+                                {user ? (
+                                    <>
+                                        <Link href="/account" className="text-lg uppercase tracking-widest text-gold-primary">My Account</Link>
+                                        <button
+                                            onClick={() => signOut()}
+                                            className="text-lg uppercase tracking-widest text-white/60 text-left"
+                                        >
+                                            Logout
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link href="/login" className="text-lg uppercase tracking-widest hover:text-primary">Log In</Link>
+                                        <Link href="/register" className="mt-4">
+                                            <Button className="w-full bg-gold-gradient text-black font-bold uppercase">Sign Up</Button>
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </SheetContent>
                     </Sheet>
