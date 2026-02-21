@@ -29,6 +29,7 @@ const milestones = [
 export function TimelineSection() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [cursorTop, setCursorTop] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
@@ -57,13 +58,14 @@ export function TimelineSection() {
     // Update cursorTop whenever activeIndex changes
     useEffect(() => {
         const activeItem = itemsRef.current[activeIndex];
-        if (activeItem) {
-            // Find the year heading or center of the item
+        const container = containerRef.current;
+        if (activeItem && container) {
             const yearHeading = activeItem.querySelector('h5');
             if (yearHeading) {
-                setCursorTop(yearHeading.offsetTop + yearHeading.offsetHeight / 2);
-            } else {
-                setCursorTop(activeItem.offsetTop + activeItem.offsetHeight / 2);
+                const containerRect = container.getBoundingClientRect();
+                const headingRect = yearHeading.getBoundingClientRect();
+                const relativeTop = headingRect.top - containerRect.top + (headingRect.height / 2);
+                setCursorTop(relativeTop);
             }
         }
     }, [activeIndex]);
@@ -75,21 +77,22 @@ export function TimelineSection() {
                 <h3 className="text-5xl font-heading font-bold">Milestones of Success</h3>
             </div>
 
-            <div className="relative max-w-5xl mx-auto">
+            <div className="relative max-w-5xl mx-auto" ref={containerRef}>
                 {/* The Vertical Line */}
                 <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-gradient-to-b from-transparent via-gold-primary/20 to-transparent" />
 
-                <div className="space-y-32 relative">
-                    {/* The Flying Cursor */}
-                    <div
-                        className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-gold-primary z-20 shadow-[0_0_25px_rgba(234,179,8,0.8)] transition-all duration-300 ease-out"
-                        style={{
-                            top: `${cursorTop}px`,
-                            transform: `translate(-50%, -50%) scale(${activeIndex % 2 === 0 ? 1.2 : 1})`
-                        }}
-                    >
-                        <div className="absolute inset-0 rounded-full animate-ping bg-gold-primary opacity-20" />
-                    </div>
+                {/* The Flying Cursor */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-gold-primary z-20 shadow-[0_0_25px_rgba(234,179,8,0.8)] transition-all duration-300 ease-out"
+                    style={{
+                        top: `${cursorTop}px`,
+                        transform: `translate(-50%, -50%) scale(${activeIndex % 2 === 0 ? 1.2 : 1})`
+                    }}
+                >
+                    <div className="absolute inset-0 rounded-full animate-ping bg-gold-primary opacity-20" />
+                </div>
+
+                <div className="flex flex-col gap-32 relative">
 
                     {milestones.map((item, index) => (
                         <div
