@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { signIn } from "@/actions/auth";
 import { useActionState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock, ShieldCheck } from "lucide-react";
 
 export default function LoginPage() {
     const [state, formAction, isPending] = useActionState(async (prevState: any, formData: FormData) => {
@@ -19,56 +19,84 @@ export default function LoginPage() {
         <main className="min-h-screen bg-black text-white flex flex-col">
             <Header />
 
-            <section className="flex-1 flex items-center justify-center relative p-6">
-                {/* Background */}
-                <div className="absolute inset-0 bg-[url('/assets/images/luxury_chauffeur_hero_1770699554633.png')] bg-cover bg-center opacity-30" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40" />
+            <section className="flex-1 flex items-center justify-center relative p-6 pt-32 pb-20">
+                {/* Background with cinematic depth */}
+                <div className="absolute inset-0 bg-[url('/assets/images/luxury_chauffeur_hero_1770699554633.png')] bg-cover bg-center opacity-25 scale-105 transition-transform duration-[10s] animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent" />
 
-                <div className="relative z-10 w-full max-w-md glass-panel p-8 rounded-lg border border-white/10 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <h1 className="text-3xl font-heading font-bold text-center mb-2">Welcome Back</h1>
-                    <p className="text-center text-muted-foreground mb-8 text-sm">Sign in to manage your bookings.</p>
+                {/* Animated Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold-primary/5 blur-[150px] rounded-full" />
 
-                    {state?.error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-md text-sm mb-6 text-center">
-                            {state.error}
+                <div className="relative z-10 w-full max-w-md">
+                    <div className="glass-panel p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                        <div className="text-center mb-10 space-y-2">
+                            <h1 className="text-4xl font-heading font-bold tracking-tight">Welcome <span className="text-gold-primary">Back</span></h1>
+                            <p className="text-zinc-500 text-sm font-light">Sign in to your exclusive Midnight Luxury account.</p>
                         </div>
-                    )}
 
-                    <form action={formAction} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>Email Address</Label>
-                            <Input
-                                name="email"
-                                type="email"
-                                required
-                                placeholder="name@example.com"
-                                className="bg-white/5 border-white/10 text-white"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <Label>Password</Label>
-                                <Link href="/forgot-password" className="text-xs text-gold-primary hover:underline">Forgot?</Link>
+                        {state?.error && (
+                            <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl text-sm mb-8 text-center animate-in shake duration-500">
+                                {state.error}
                             </div>
-                            <Input
-                                name="password"
-                                type="password"
-                                required
-                                placeholder="••••••••"
-                                className="bg-white/5 border-white/10 text-white"
-                            />
-                        </div>
-                        <Button
-                            type="submit"
-                            disabled={isPending}
-                            className="w-full bg-gold-gradient text-black font-bold h-12"
-                        >
-                            {isPending ? <Loader2 className="animate-spin" /> : "Sign In"}
-                        </Button>
-                    </form>
+                        )}
 
-                    <div className="mt-6 text-center text-sm text-gray-400">
-                        Don't have an account? <Link href="/register" className="text-gold-primary hover:underline">Create one</Link>
+                        <form action={formAction} className="space-y-6">
+                            <div className="space-y-2 group">
+                                <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Email Address</Label>
+                                <div className="relative">
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
+                                    <Input
+                                        name="email"
+                                        type="email"
+                                        required
+                                        placeholder="name@example.com"
+                                        className="h-14 pl-12 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2 group">
+                                <div className="flex justify-between items-center ml-1">
+                                    <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Password</Label>
+                                    <Link href="/forgot-password" className="text-[10px] uppercase tracking-widest text-gold-primary/70 hover:text-gold-primary transition-colors">Forgot Password?</Link>
+                                </div>
+                                <div className="relative">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
+                                    <Input
+                                        name="password"
+                                        type="password"
+                                        required
+                                        placeholder="••••••••"
+                                        className="h-14 pl-12 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="pt-4">
+                                <Button
+                                    type="submit"
+                                    disabled={isPending}
+                                    className="w-full bg-gold-gradient text-black font-bold h-14 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                                >
+                                    {isPending ? (
+                                        <Loader2 className="animate-spin w-5 h-5" />
+                                    ) : (
+                                        "Sign In"
+                                    )}
+                                </Button>
+                            </div>
+                        </form>
+
+                        <div className="mt-8 text-center text-xs text-zinc-600 uppercase tracking-widest font-bold">
+                            New to Midnight Luxury? <Link href="/register" className="text-gold-primary hover:text-white transition-colors underline underline-offset-4 decoration-gold-primary/30">Create Account</Link>
+                        </div>
+                    </div>
+
+                    {/* Back to Home */}
+                    <div className="mt-8 text-center">
+                        <Link href="/" className="text-zinc-500 hover:text-white transition-colors text-sm font-light">
+                            ← Return to Homepage
+                        </Link>
                     </div>
                 </div>
             </section>
