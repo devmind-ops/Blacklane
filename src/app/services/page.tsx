@@ -171,13 +171,13 @@ export default function ServicesPage() {
                         No matter your requirements, we are here to ensure your journey is nothing short of exceptional. Our global network is standing by.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/booking">
-                            <Button size="lg" className="bg-gold-primary text-black hover:bg-gold-light px-12 font-bold h-14">
+                        <Link href="/">
+                            <Button size="lg" className="bg-gold-primary text-black hover:bg-gold-light px-12 font-bold h-14 hover:scale-105 transition-all">
                                 Book Now
                             </Button>
                         </Link>
                         <Link href="/fleet">
-                            <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/5 px-12 h-14">
+                            <Button size="lg" variant="outline" className="border-white/20 hover:border-gold-primary hover:text-gold-primary hover:bg-gold-primary/5 px-12 h-14 hover:scale-105 transition-all group">
                                 View Fleet
                             </Button>
                         </Link>
