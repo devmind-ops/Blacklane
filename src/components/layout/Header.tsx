@@ -66,9 +66,9 @@ export function Header() {
 
                     {user ? (
                         <div className="flex items-center gap-6">
-                            <Link href="/account" className="flex items-center gap-2 text-sm uppercase tracking-widest text-gold-light hover:text-white transition-colors">
+                            <Link href="/profile" className="flex items-center gap-2 text-sm uppercase tracking-widest text-gold-light hover:text-white transition-colors">
                                 <User className="w-4 h-4" />
-                                Account
+                                Profile
                             </Link>
                             <button
                                 onClick={() => signOut()}
@@ -112,7 +112,7 @@ export function Header() {
 
                                 {user ? (
                                     <>
-                                        <Link href="/account" className="text-lg uppercase tracking-widest text-gold-primary">My Account</Link>
+                                        <Link href="/profile" className="text-lg uppercase tracking-widest text-gold-primary">Profile</Link>
                                         <button
                                             onClick={() => signOut()}
                                             className="text-lg uppercase tracking-widest text-white/60 text-left"

@@ -51,3 +51,24 @@ export async function signOut() {
     await supabase.auth.signOut();
     return redirect("/login");
 }
+
+export async function getUserProfile() {
+    try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) return null;
+
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+
+        if (error) throw error;
+        return data;
+    } catch (e) {
+        console.error("Failed to fetch user profile:", e);
+        return null;
+    }
+}

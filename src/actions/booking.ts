@@ -109,3 +109,31 @@ export async function createBooking(bookingData: {
         return { error: "Failed to create booking" };
     }
 }
+
+export async function getUserBookings() {
+    try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) return [];
+
+        const { data, error } = await supabase
+            .from("bookings")
+            .select(`
+                *,
+                fleet (
+                    name,
+                    category,
+                    image_url
+                )
+            `)
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data;
+    } catch (e) {
+        console.error("Failed to fetch user bookings:", e);
+        return [];
+    }
+}
