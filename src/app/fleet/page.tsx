@@ -23,7 +23,7 @@ export default function FleetPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
                 <div className="relative z-10 text-center space-y-4 px-6">
-                    <h1 className="text-5xl md:text-7xl font-heading font-bold text-white animate-in slide-in-from-bottom-4 duration-700">Our Fleet</h1>
+                    <h1 className="text-5xl md:text-6xl font-heading font-bold text-white animate-in slide-in-from-bottom-4 duration-700">Our Fleet</h1>
                     <p className="text-xl text-gold-light max-w-2xl mx-auto font-light">Elegance, comfort, and safety in every mile.</p>
                 </div>
             </section>

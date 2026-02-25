@@ -18,14 +18,14 @@ export function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/30 z-10" />
             </div>
 
-            <div className="container relative z-20 mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center pt-20">
+            <div className="container relative z-20 mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-32 pb-20">
 
                 {/* Text Content */}
-                <div className="space-y-6 max-w-2xl animate-in slide-in-from-left duration-1000">
-                    <h1 className="text-5xl md:text-7xl font-bold font-heading leading-tight text-white drop-shadow-lg">
-                        The <span className="text-gold-gradient">Art</span> of <br /> Movement
+                <div className="space-y-6 max-w-2xl animate-in slide-in-from-left duration-1000 text-center lg:text-left">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading leading-tight text-white drop-shadow-lg">
+                        The <span className="text-gold-gradient">Art</span> of <br className="hidden sm:block" /> Movement
                     </h1>
-                    <p className="text-xl text-gray-300 font-light border-l-4 border-primary pl-6 py-2">
+                    <p className="text-lg md:text-xl text-gray-300 font-light border-l-4 border-primary pl-6 py-2 mx-auto lg:mx-0 max-w-lg lg:max-w-none">
                         Experience the pinnacle of luxury travel. Professional chauffeurs, immaculate fleet, and seamless global service.
                     </p>
                 </div>

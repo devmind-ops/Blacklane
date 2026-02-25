@@ -19,7 +19,7 @@ const values = [
 export function ValuesSection() {
     return (
         <section id="about" className="py-24 bg-black text-white overflow-hidden relative">
-            <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
+            <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
                 {/* Image Side */}
                 <div className="flex-1 relative w-full h-[400px] lg:h-[600px] group">
@@ -35,7 +35,7 @@ export function ValuesSection() {
 
                 {/* Content Side */}
                 <div className="flex-1 space-y-10">
-                    <h2 className="text-4xl md:text-5xl font-heading font-bold leading-tight">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold leading-tight">
                         Why <span className="text-gold-gradient">Midnight Luxury?</span>
                     </h2>
 

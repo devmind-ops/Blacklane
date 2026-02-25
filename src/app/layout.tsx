@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Experience the pinnacle of luxury travel. Professional chauffeurs, immaculate fleet.",
 };
 
+import { ProgressBarProvider } from "@/components/providers/ProgressBarProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${inter.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {children}
+        <ProgressBarProvider>
+          {children}
+        </ProgressBarProvider>
       </body>
     </html>
   );

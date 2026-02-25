@@ -37,9 +37,9 @@ export function Testimonials() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-dark/5 via-transparent to-transparent pointer-events-none" />
 
             <div className="container mx-auto px-6 text-center">
-                <h2 className="text-3xl md:text-4xl font-heading font-bold mb-16 text-white/50 uppercase tracking-widest">Client Experiences</h2>
+                <h2 className="text-2xl md:text-4xl font-heading font-bold mb-12 text-white/50 uppercase tracking-widest px-4">Client Experiences</h2>
 
-                <div className="relative max-w-4xl mx-auto h-[350px] md:h-[300px]">
+                <div className="relative max-w-4xl mx-auto min-h-[400px] md:min-h-[300px]">
                     {testimonials.map((item, index) => (
                         <div
                             key={index}
@@ -49,7 +49,7 @@ export function Testimonials() {
                             )}
                         >
                             <Quote className="w-12 h-12 text-gold-dark mb-8 opacity-50" />
-                            <p className="text-2xl md:text-3xl font-heading italic text-gray-200 leading-relaxed mb-8">
+                            <p className="text-xl md:text-2xl lg:text-3xl font-heading italic text-gray-200 leading-relaxed mb-8 px-4">
                                 &ldquo;{item.text}&rdquo;
                             </p>
                             <p className="text-gold-primary font-bold uppercase tracking-widest text-sm">

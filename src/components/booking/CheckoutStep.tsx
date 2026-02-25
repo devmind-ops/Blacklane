@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { createBooking } from "@/actions/booking";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +14,7 @@ interface CheckoutStepProps {
 }
 
 export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
+    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [success, setSuccess] = useState(false);
     const [bookingId, setBookingId] = useState<string | null>(null);
@@ -57,7 +59,7 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
                     </p>
                 </div>
                 <Button
-                    onClick={() => window.location.href = '/'}
+                    onClick={() => router.push('/')}
                     className="w-full h-14 bg-gold-gradient text-black font-bold uppercase tracking-widest hover:scale-[1.02] transition-all"
                 >
                     Return to Homepage
@@ -164,10 +166,10 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
                                 </div>
                                 <Button
                                     onClick={handleConfirm}
-                                    disabled={isPending}
+                                    loading={isPending}
                                     className="w-full h-14 bg-gold-gradient text-black font-bold uppercase tracking-widest hover:scale-[1.05] active:scale-95 transition-all shadow-xl shadow-gold-primary/10"
                                 >
-                                    {isPending ? <Loader2 className="w-6 h-6 animate-spin" /> : "Book & Pay Now"}
+                                    Book & Pay Now
                                 </Button>
                                 <button
                                     onClick={onBack}

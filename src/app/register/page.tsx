@@ -30,7 +30,7 @@ export default function RegisterPage() {
                 <div className="relative z-10 w-full max-w-md">
                     <div className="glass-panel p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
                         <div className="text-center mb-10 space-y-2">
-                            <h1 className="text-4xl font-heading font-bold tracking-tight">Join the <span className="text-gold-primary">Circle</span></h1>
+                            <h1 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">Join the <span className="text-gold-primary">Circle</span></h1>
                             <p className="text-zinc-500 text-sm font-light">Create an account for personalized luxury travel.</p>
                         </div>
 
@@ -94,14 +94,10 @@ export default function RegisterPage() {
                                 <div className="pt-4">
                                     <Button
                                         type="submit"
-                                        disabled={isPending}
+                                        loading={isPending}
                                         className="w-full bg-gold-gradient text-black font-bold h-14 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                                     >
-                                        {isPending ? (
-                                            <Loader2 className="animate-spin w-5 h-5" />
-                                        ) : (
-                                            "Create Account"
-                                        )}
+                                        Create Account
                                     </Button>
                                 </div>
                             </form>

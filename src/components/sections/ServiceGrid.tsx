@@ -66,7 +66,7 @@ export function ServiceGrid() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {services.map((service, index) => (
                         <Link key={index} href={service.href} className="group">
-                            <Card className="h-full bg-zinc-900/50 border-white/5 hover:border-gold-dark/50 hover:bg-zinc-900 transition-all duration-300 hover:-translate-y-2 group-hover:shadow-gold-sm">
+                            <Card className="h-full bg-zinc-900/50 border-white/5 hover:border-gold-dark/50 hover:bg-zinc-900 transition-all duration-300 hover:-translate-y-2">
                                 <CardContent className="p-8 flex flex-col items-center text-center h-full">
                                     <div className="mb-6 p-4 rounded-full bg-white/5 group-hover:bg-primary/20 transition-colors">
                                         <service.icon className="w-8 h-8 text-primary group-hover:text-gold-light transition-colors" />

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Plane, Building2, Clock, Briefcase, Wine, Gem, Shield, Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const services = [
     {
@@ -91,7 +92,7 @@ export default function ServicesPage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-black/20 to-black" />
 
                 <div className="relative z-10 text-center space-y-6 px-6 max-w-4xl mx-auto">
-                    <h1 className="text-5xl md:text-7xl font-heading font-bold tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                    <h1 className="text-5xl md:text-6xl font-heading font-bold tracking-tight animate-in fade-in slide-in-from-bottom-8 duration-1000">
                         Our World Class <span className="text-gold-primary">Services</span>
                     </h1>
                     <p className="text-lg md:text-xl text-zinc-400 font-light max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200">
@@ -107,7 +108,10 @@ export default function ServicesPage() {
                         {services.map((service, index) => (
                             <div
                                 key={index}
-                                className={`flex flex-col lg:flex-row items-center gap-12 group ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}
+                                className={cn(
+                                    "flex flex-col lg:flex-row items-center gap-10 lg:gap-16 group",
+                                    index % 2 === 1 ? 'lg:flex-row-reverse' : ''
+                                )}
                             >
                                 {/* Content */}
                                 <div className="flex-1 space-y-8">
@@ -121,7 +125,7 @@ export default function ServicesPage() {
                                         </h2>
                                     </div>
 
-                                    <p className="text-zinc-400 text-lg leading-relaxed font-light">
+                                    <p className="text-zinc-400 text-base md:text-lg leading-relaxed font-light">
                                         {service.description}
                                     </p>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useTransition, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +46,7 @@ function BookingWidgetContent() {
     };
 
     const searchParams = useSearchParams();
+    const router = useRouter();
     const [bookingType, setBookingType] = useState<"one-way" | "hourly">("one-way");
     const [isPending, startTransition] = useTransition();
     const [step, setStep] = useState<"search" | "confirm" | "success">("search");
@@ -95,7 +96,9 @@ function BookingWidgetContent() {
             duration: bookingType === 'hourly' ? duration : ""
         });
 
-        window.location.href = `/booking?${params.toString()}`;
+        startTransition(() => {
+            router.push(`/booking?${params.toString()}`);
+        });
     };
 
     const handleConfirmBooking = () => {
@@ -130,7 +133,7 @@ function BookingWidgetContent() {
 
     if (step === "success") {
         return (
-            <Card className="glass-panel border-white/10 w-full max-w-[450px] shadow-2xl overflow-hidden py-12">
+            <Card className="glass-panel border-white/10 w-full max-w-md mx-auto shadow-2xl overflow-hidden py-12 px-6">
                 <CardContent className="flex flex-col items-center text-center space-y-6">
                     <CheckCircle2 className="w-16 h-16 text-primary animate-bounce" />
                     <h2 className="text-2xl font-heading font-bold text-white">Booking Request Sent</h2>
@@ -146,7 +149,7 @@ function BookingWidgetContent() {
     }
 
     return (
-        <Card className="glass-panel border-white/10 w-full max-w-[450px] shadow-2xl overflow-hidden relative group">
+        <Card className="glass-panel border-white/10 w-full max-w-md lg:max-w-[450px] shadow-2xl overflow-hidden relative group">
             <div className="absolute inset-0 bg-gold-gradient opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none" />
 
             <CardHeader>
@@ -281,10 +284,10 @@ function BookingWidgetContent() {
 
                             <Button
                                 onClick={handleSearch}
-                                disabled={isPending}
+                                loading={isPending}
                                 className="w-full bg-gold-gradient text-black font-bold h-14 uppercase tracking-widest hover:scale-[1.02] transition-all duration-300 mt-4"
                             >
-                                {isPending ? <Loader2 className="animate-spin" /> : "Calculate Price"}
+                                Calculate Price
                             </Button>
                         </div>
                     </>
@@ -339,10 +342,10 @@ function BookingWidgetContent() {
                             </Button>
                             <Button
                                 onClick={handleConfirmBooking}
-                                disabled={isPending}
+                                loading={isPending}
                                 className="flex-[2] bg-gold-gradient text-black font-bold uppercase"
                             >
-                                {isPending ? <Loader2 className="animate-spin" /> : "Confirm Booking"}
+                                Confirm Booking
                             </Button>
                         </div>
                     </div>
