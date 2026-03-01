@@ -13,7 +13,7 @@ export function Footer() {
                     {/* Brand & Newsletter */}
                     <div className="space-y-6">
                         <Link href="/" className="inline-block text-2xl font-bold tracking-[2px] font-heading">
-                            MIDNIGHT<span className="text-primary">LUXURY</span>
+                            BLACKCARS<span className="text-primary">CHAUFFEURS</span>
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed">
                             Experience the pinnacle of luxury travel. Professional chauffeurs, immaculate fleet, and seamless global service.

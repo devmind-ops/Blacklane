@@ -46,7 +46,7 @@ export function Header() {
             <div className="container mx-auto px-6 flex justify-between items-center">
                 {/* Logo */}
                 <Link href="/" className="text-xl md:text-2xl font-bold tracking-[2px] font-heading shrink-0">
-                    MIDNIGHT<span className="text-primary">LUXURY</span>
+                    BLACKCARS<span className="text-primary">CHAUFFEURS</span>
                 </Link>
 
                 {/* Desktop Nav */}
@@ -105,7 +105,7 @@ export function Header() {
                             {/* Menu Header */}
                             <div className="p-8 border-b border-white/5 flex justify-between items-center bg-black">
                                 <Link href="/" className="text-xl font-bold tracking-[2px] font-heading">
-                                    MIDNIGHT<span className="text-primary">LUXURY</span>
+                                    BLACKCARS<span className="text-primary">CHAUFFEURS</span>
                                 </Link>
                             </div>
 
