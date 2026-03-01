@@ -36,7 +36,7 @@ export function ValuesSection() {
                 {/* Content Side */}
                 <div className="flex-1 space-y-10">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold leading-tight">
-                        Why <span className="text-gold-gradient">Midnight Luxury?</span>
+                        Why <span className="text-gold-gradient">Blackcars Chauffeurs?</span>
                     </h2>
 
                     <div className="space-y-8">

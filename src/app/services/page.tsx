@@ -84,7 +84,7 @@ export default function ServicesPage() {
             <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
                 <Image
                     src="/assets/images/luxury_chauffeur_hero_1770699554633.png"
-                    alt="Midnight Luxury Services"
+                    alt="Blackcars Chauffeurs Services"
                     fill
                     className="object-cover opacity-50 contrast-125"
                     priority

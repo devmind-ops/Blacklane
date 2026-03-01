@@ -196,7 +196,7 @@ export function DetailsStep({ bookingData, onBack, onContinue }: DetailsStepProp
                             onClick={() => setAuthState(authState === "login" ? "register" : "login")}
                             className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 hover:text-gold-primary transition-colors"
                         >
-                            {authState === "login" ? "New to Midnight Luxury? Join Now" : "Already a member? Sign In"}
+                            {authState === "login" ? "New to Blackcars Chauffeurs? Join Now" : "Already a member? Sign In"}
                         </button>
                     </div>
                 </div>

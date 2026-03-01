@@ -52,7 +52,7 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
                 <div className="space-y-4">
                     <h2 className="text-4xl font-heading font-bold">Booking <span className="text-gold-primary">Confirmed</span></h2>
                     <p className="text-zinc-500 font-light">
-                        Thank you for choosing Midnight Luxury. Your reference number is <span className="text-white font-bold font-mono">{bookingId?.slice(0, 8).toUpperCase()}</span>.
+                        Thank you for choosing Blackcars Chauffeurs. Your reference number is <span className="text-white font-bold font-mono">{bookingId?.slice(0, 8).toUpperCase()}</span>.
                     </p>
                     <p className="text-zinc-400 text-sm">
                         A confirmation email has been sent to <span className="text-gold-primary">{bookingData.customerDetails.email}</span>. Your chauffeur will be waiting.

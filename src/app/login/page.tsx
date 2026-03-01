@@ -31,7 +31,7 @@ export default function LoginPage() {
                     <div className="glass-panel p-10 rounded-3xl border border-white/5 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
                         <div className="text-center mb-10 space-y-2">
                             <h1 className="text-4xl md:text-5xl font-heading font-bold tracking-tight">Welcome <span className="text-gold-primary">Back</span></h1>
-                            <p className="text-zinc-500 text-sm font-light">Sign in to your exclusive Midnight Luxury account.</p>
+                            <p className="text-zinc-500 text-sm font-light">Sign in to your exclusive Blackcars Chauffeurs account.</p>
                         </div>
 
                         {state?.error && (
@@ -84,7 +84,7 @@ export default function LoginPage() {
                         </form>
 
                         <div className="mt-8 text-center text-xs text-zinc-600 uppercase tracking-widest font-bold">
-                            New to Midnight Luxury? <Link href="/register" className="text-gold-primary hover:text-white transition-colors underline underline-offset-4 decoration-gold-primary/30">Create Account</Link>
+                            New to Blackcars Chauffeurs? <Link href="/register" className="text-gold-primary hover:text-white transition-colors underline underline-offset-4 decoration-gold-primary/30">Create Account</Link>
                         </div>
                     </div>
 

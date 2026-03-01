@@ -15,7 +15,7 @@ export default function AboutPage() {
             <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
                 <Image
                     src="/assets/images/luxury_fleet_lineup_1770699971769.png"
-                    alt="About Midnight Luxury"
+                    alt="About Blackcars Chauffeurs"
                     fill
                     className="object-cover opacity-60"
                     priority
@@ -76,7 +76,7 @@ export default function AboutPage() {
                         </div>
                         <div className="space-y-6 text-xl text-zinc-400 font-light leading-relaxed">
                             <p>
-                                Midnight Luxury was born from a vision to redefine the world of private transportation. We believe that professional chauffeuring is an art form—one that requires precision, discretion, and a deep understanding of the traveler's needs.
+                                Blackcars Chauffeurs was born from a vision to redefine the world of private transportation. We believe that professional chauffeuring is an art form—one that requires precision, discretion, and a deep understanding of the traveler's needs.
                             </p>
                             <p>
                                 What began as a local service in London has evolved into a global benchmark for luxury travel. Our commitment remains the same: ensuring every mile is traveled with absolute comfort and peace of mind.

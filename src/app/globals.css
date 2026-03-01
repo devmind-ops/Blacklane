@@ -44,14 +44,14 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* Custom Midnight Luxury Colors */
+  /* Custom Blackcars Chauffeurs Colors */
   --color-gold-primary: var(--gold-primary);
   --color-gold-light: var(--gold-light);
   --color-gold-dark: var(--gold-dark);
 }
 
 :root {
-  /* Midnight Luxury - Dark Theme by Default */
+  /* Blackcars Chauffeurs - Dark Theme by Default */
   --background: #050505;
   --foreground: #ffffff;
 

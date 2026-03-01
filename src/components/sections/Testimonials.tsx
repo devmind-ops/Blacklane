@@ -16,7 +16,7 @@ const testimonials = [
         role: "Newlyweds",
     },
     {
-        text: "I use Midnight Luxury for all my airport transfers. Reliable tracking and the comfort of the S-Class allow me to work while I travel.",
+        text: "I use Blackcars Chauffeurs for all my airport transfers. Reliable tracking and the comfort of the S-Class allow me to work while I travel.",
         author: "Michael Ross, Entrepreneur",
         role: "Entrepreneur",
     },

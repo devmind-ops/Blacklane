@@ -318,7 +318,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                             <h2 className="text-gold-primary text-sm font-bold uppercase tracking-[0.4em]">In-Cabin Comfort</h2>
                             <h3 className="text-4xl md:text-5xl font-heading font-bold leading-tight">Elevated Travel Amenities</h3>
                             <p className="text-gray-400 text-lg font-light leading-relaxed">
-                                Every journey with Midnight Luxury is designed to be an experience in indulgence.
+                                Every journey with Blackcars Chauffeurs is designed to be an experience in indulgence.
                                 We provide a curated selection of amenities to ensure your absolute comfort and connectivity.
                             </p>
                             <div className="grid grid-cols-2 gap-6 pt-4">
@@ -394,7 +394,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     <div className="max-w-4xl mx-auto">
                         <svg className="w-12 h-12 text-gold-primary/20 mx-auto mb-8" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 8.44772 10.4647 8 11.017 8H14.017C14.017 6.34315 15.3601 5 17.017 5H18.017C18.5693 5 19.017 4.55228 19.017 4V1C19.017 0.447715 18.5693 0 18.017 0H17.017C13.7033 0 11.017 2.68629 11.017 6V7H10.017C6.70329 7 4.017 9.68629 4.017 13V20C4.017 20.5523 4.46471 21 5.017 21H14.017Z" /></svg>
                         <p className="text-3xl md:text-4xl font-heading italic text-white leading-tight mb-12">
-                            "The level of service provided by Midnight Luxury is unmatched. From the pristine condition of the S-Class to the absolute professionalism of the chauffeur, every detail was perfect."
+                            "The level of service provided by Blackcars Chauffeurs is unmatched. From the pristine condition of the S-Class to the absolute professionalism of the chauffeur, every detail was perfect."
                         </p>
                         <div className="flex items-center justify-center gap-4">
                             <div className="w-12 h-px bg-gold-primary/30" />

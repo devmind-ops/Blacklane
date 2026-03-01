@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Midnight Luxury - Premium Chauffeur Services",
+  title: "Blackcars Chauffeurs - Premium Chauffeur Services",
   description: "Experience the pinnacle of luxury travel. Professional chauffeurs, immaculate fleet.",
 };
 

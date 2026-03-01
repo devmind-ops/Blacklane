@@ -82,7 +82,7 @@ export function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-                    <p suppressHydrationWarning>&copy; {new Date().getFullYear()} Midnight Luxury Chauffeurs. All rights reserved.</p>
+                    <p suppressHydrationWarning>&copy; {new Date().getFullYear()} Blackcars Chauffeurs Chauffeurs. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
