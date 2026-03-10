@@ -96,7 +96,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2 text-gold-primary">
                                             <Wifi className="h-4 w-4" />
-                                            <span className="text-xs font-bold uppercase tracking-tighter">4G WiFi</span>
+                                            <span className="text-xs font-bold uppercase tracking-tighter">5G WiFi</span>
                                         </div>
                                         <p className="text-3xl font-heading">On-board</p>
                                     </div>

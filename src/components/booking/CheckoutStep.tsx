@@ -19,6 +19,8 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
     const [success, setSuccess] = useState(false);
     const [bookingId, setBookingId] = useState<string | null>(null);
 
+    const totalAmount = bookingData.selectedVehicle.price + (bookingData.extraFees || 0);
+
     const handleConfirm = () => {
         startTransition(async () => {
             const result = await createBooking({
@@ -28,10 +30,13 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
                 vehicle_id: bookingData.selectedVehicle.vehicleId,
                 booking_type: bookingData.type,
                 duration_hours: bookingData.type === 'hourly' ? parseInt(bookingData.duration) : undefined,
-                calculated_price: bookingData.selectedVehicle.price,
+                calculated_price: totalAmount,
                 customer_details: bookingData.customerDetails,
-                flight_number: bookingData.flightNumber,
-                notes: bookingData.notes
+                flight_number: bookingData.flightNumber?.trim() || "",
+                airport_code: bookingData.airportCode?.trim() || "",
+                airline: bookingData.airline?.trim() || "",
+                pickup_method: bookingData.pickupMethod || "curbside",
+                notes: bookingData.notes?.trim() || ""
             });
 
             if (result.success) {
@@ -110,8 +115,12 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
                                 </div>
                                 <div className="space-y-4">
                                     <h4 className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Additional Info</h4>
-                                    <div className="space-y-1 text-xs text-zinc-400">
+                                    <div className="space-y-2 text-xs text-zinc-400">
+                                        {bookingData.airportCode && (
+                                            <p>Airport: <span className="text-white">{bookingData.airportCode} ({bookingData.airline})</span></p>
+                                        )}
                                         {bookingData.flightNumber && <p>Flight: <span className="text-white">{bookingData.flightNumber}</span></p>}
+                                        {bookingData.pickupMethod === 'meet-greet' && <p>Method: <span className="text-white">Inside Meet & Greet</span></p>}
                                         <p className="italic">"{bookingData.notes || 'No special requests'}"</p>
                                     </div>
                                 </div>
@@ -138,23 +147,25 @@ export function CheckoutStep({ bookingData, onBack }: CheckoutStepProps) {
 
                             <div className="space-y-4">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-zinc-400">Service Fee</span>
-                                    <span>£{bookingData.selectedVehicle.price}</span>
+                                    <span className="text-zinc-400">Base Fare</span>
+                                    <span>${bookingData.selectedVehicle.price}</span>
                                 </div>
+                                {bookingData.extraFees > 0 && (
+                                    <div className="flex justify-between text-sm text-gold-primary">
+                                        <span className="text-zinc-400">Additional Fees</span>
+                                        <span>+${bookingData.extraFees}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between text-sm">
                                     <span className="text-zinc-400">Taxes & Fees</span>
                                     <span className="text-green-500">Included</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-zinc-400">Wait Time (60 min)</span>
-                                    <span className="text-green-500">Free</span>
                                 </div>
                             </div>
 
                             <div className="pt-4 border-t border-white/5 space-y-2">
                                 <div className="flex justify-between items-end text-white">
                                     <span className="text-sm font-bold">Total Amount</span>
-                                    <span className="text-4xl font-bold tracking-tighter text-gold-primary">£{bookingData.selectedVehicle.price}</span>
+                                    <span className="text-4xl font-bold tracking-tighter text-gold-primary">${totalAmount}</span>
                                 </div>
                                 <p className="text-[10px] text-zinc-600 text-right font-bold uppercase tracking-widest">All inclusive price</p>
                             </div>

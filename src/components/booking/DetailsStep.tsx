@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { User, Mail, Phone, Plane, MessageSquare, ArrowLeft, ArrowRight, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { getUserProfile } from "@/actions/auth";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 
 interface DetailsStepProps {
     bookingData: any;
@@ -24,9 +25,12 @@ export function DetailsStep({ bookingData, onBack, onContinue }: DetailsStepProp
     const supabase = createClient();
 
     const [details, setDetails] = useState({
-        customerDetails: bookingData.customerDetails,
-        flightNumber: bookingData.flightNumber,
-        notes: bookingData.notes
+        customerDetails: bookingData.customerDetails || { name: "", email: "", phone: "" },
+        airportCode: bookingData.airportCode || "",
+        airline: bookingData.airline || "",
+        flightNumber: bookingData.flightNumber || "",
+        pickupMethod: bookingData.pickupMethod || "curbside",
+        notes: bookingData.notes || ""
     });
 
     useEffect(() => {
@@ -102,15 +106,31 @@ export function DetailsStep({ bookingData, onBack, onContinue }: DetailsStepProp
         });
     };
 
-    const isAirport = bookingData.pickup.toLowerCase().includes("airport") ||
-        bookingData.pickup.toLowerCase().includes("heathrow") ||
-        bookingData.pickup.toLowerCase().includes("gatwick") ||
-        bookingData.pickup.toLowerCase().includes("lhr") ||
-        bookingData.pickup.toLowerCase().includes("lgw");
+    const normalizedType = (bookingData.type || "").toLowerCase();
+    const isAirportArrival = normalizedType === 'airport-arrival';
+    const isAirportDeparture = normalizedType === 'airport-departure';
+    const isAirport = isAirportArrival || isAirportDeparture;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onContinue(details);
+
+        // Calculate extra fees
+        let fees = 0;
+        if (details.pickupMethod === 'meet-greet') fees += 20;
+
+        const notesLower = (details.notes || "").toLowerCase();
+        if (notesLower.includes('car seat') || notesLower.includes('child seat')) {
+            fees += 20;
+        }
+
+        if (isAirport) {
+            if (!details.airportCode?.trim() || !details.airline?.trim() || !details.flightNumber?.trim()) {
+                alert("Please fill in all flight details (Airport Code, Airline, and Flight Number).");
+                return;
+            }
+        }
+
+        onContinue({ ...details, extraFees: fees });
     };
 
     if (loading) {
@@ -278,32 +298,95 @@ export function DetailsStep({ bookingData, onBack, onContinue }: DetailsStepProp
 
                     {/* Additional Info */}
                     <div className="space-y-6">
-                        {isAirport && (
-                            <div className="space-y-2 group animate-in slide-in-from-top-2 duration-300">
-                                <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Flight Number</Label>
+                        <div className="space-y-6">
+                            {isAirport && (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2 group">
+                                            <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Airport Code</Label>
+                                            <Input
+                                                required={isAirport}
+                                                value={details.airportCode}
+                                                onChange={(e) => setDetails({ ...details, airportCode: e.target.value })}
+                                                placeholder="e.g. LHR"
+                                                className="h-14 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                            />
+                                        </div>
+                                        <div className="space-y-2 group">
+                                            <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Airline</Label>
+                                            <Input
+                                                required={isAirport}
+                                                value={details.airline}
+                                                onChange={(e) => setDetails({ ...details, airline: e.target.value })}
+                                                placeholder="e.g. British Airways"
+                                                className="h-14 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 group">
+                                        <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Flight Number</Label>
+                                        <div className="relative">
+                                            <Plane className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
+                                            <Input
+                                                required={isAirport}
+                                                value={details.flightNumber}
+                                                onChange={(e) => setDetails({ ...details, flightNumber: e.target.value })}
+                                                placeholder="e.g. BA123"
+                                                className="h-14 pl-12 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {isAirportArrival && (
+                                        <div className="space-y-3">
+                                            <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Pickup Method</Label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setDetails({ ...details, pickupMethod: "curbside" })}
+                                                    className={cn(
+                                                        "h-14 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest",
+                                                        details.pickupMethod === "curbside"
+                                                            ? "bg-gold-primary/10 border-gold-primary text-gold-primary"
+                                                            : "bg-white/5 border-white/10 text-zinc-500 hover:border-white/20"
+                                                    )}
+                                                >
+                                                    Curbside Pickup
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setDetails({ ...details, pickupMethod: "meet-greet" })}
+                                                    className={cn(
+                                                        "h-14 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest",
+                                                        details.pickupMethod === "meet-greet"
+                                                            ? "bg-gold-primary/10 border-gold-primary text-gold-primary"
+                                                            : "bg-white/5 border-white/10 text-zinc-500 hover:border-white/20"
+                                                    )}
+                                                >
+                                                    Inside Meet & Greet (+$20)
+                                                </button>
+                                            </div>
+                                            {details.pickupMethod === "meet-greet" && (
+                                                <p className="text-[10px] text-zinc-500 italic ml-1">*Driver meets you in the terminal with a name board. Parking fees charged at cost.</p>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="space-y-2 group">
+                                <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Special Requests / Notes</Label>
                                 <div className="relative">
-                                    <Plane className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
-                                    <Input
-                                        value={details.flightNumber}
-                                        onChange={(e) => setDetails({ ...details, flightNumber: e.target.value })}
-                                        placeholder="e.g. BA123"
-                                        className="h-14 pl-12 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700"
+                                    <MessageSquare className="absolute left-4 top-4 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
+                                    <Textarea
+                                        value={details.notes}
+                                        onChange={(e) => setDetails({ ...details, notes: e.target.value })}
+                                        placeholder="e.g. Starbucks coffee, Captain seating, or toddler car seat (extra $20)..."
+                                        className="min-h-[148px] pl-12 pt-4 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700 resize-none"
                                     />
                                 </div>
-                                <p className="text-[10px] text-zinc-600 font-medium ml-1">We track your flight to adjust for delays.</p>
-                            </div>
-                        )}
-
-                        <div className="space-y-2 group">
-                            <Label className="text-zinc-400 font-bold uppercase tracking-widest text-[10px] ml-1">Notes for Chauffeur</Label>
-                            <div className="relative">
-                                <MessageSquare className="absolute left-4 top-4 w-4 h-4 text-zinc-600 transition-colors group-focus-within:text-gold-primary" />
-                                <Textarea
-                                    value={details.notes}
-                                    onChange={(e) => setDetails({ ...details, notes: e.target.value })}
-                                    placeholder="Enter any special requests, gate numbers, or child seat requirements..."
-                                    className="min-h-[148px] pl-12 pt-4 bg-white/5 border-white/10 text-white rounded-xl focus:border-gold-primary/50 transition-all placeholder:text-zinc-700 resize-none"
-                                />
+                                <p className="text-[10px] text-zinc-600 font-medium ml-1">Note: Requesting a car seat adds a $20.00 fee to your total.</p>
+                                <p className="text-[10px] text-zinc-500 italic ml-1 mt-1">Note: Driver’s parking fees will be added to the final invoice based on the uploaded slip.</p>
                             </div>
                         </div>
                     </div>

@@ -54,14 +54,69 @@ export function Header() {
                     <Link href="/" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
                         Home
                     </Link>
-                    <Link href="/services" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
-                        Services
-                    </Link>
-                    <Link href="/fleet" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
-                        Fleet
-                    </Link>
+
+                    {/* Services Dropdown */}
+                    <div className="relative group px-2 py-4">
+                        <Link href="/services" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors flex items-center gap-1">
+                            Services
+                            <svg className="w-3 h-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Link>
+                        <div className="absolute top-full left-0 w-64 bg-black/95 border border-white/10 backdrop-blur-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-4 shadow-2xl">
+                            {[
+                                { name: "Airport Transfers", href: "/services/airport" },
+                                { name: "City to City", href: "/services/city" },
+                                { name: "Hourly Service", href: "/services/hourly" },
+                                { name: "Business Travel", href: "/services/business" },
+                                { name: "Events & Galas", href: "/services/events" },
+                                { name: "Wedding Chauffeur", href: "/services/wedding" },
+                                { name: "Secure Travel", href: "/services/secure" },
+                                { name: "Star Class Chauffeurs", href: "/services/chauffeurs" },
+                            ].map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="block px-6 py-2.5 text-[10px] uppercase tracking-[2px] text-white/60 hover:text-primary hover:bg-white/5 transition-colors"
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Fleet Dropdown */}
+                    <div className="relative group px-2 py-4">
+                        <Link href="/fleet" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors flex items-center gap-1">
+                            Fleet
+                            <svg className="w-3 h-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Link>
+                        <div className="absolute top-full left-0 w-56 bg-black/95 border border-white/10 backdrop-blur-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 py-4 shadow-2xl">
+                            {[
+                                { name: "Business Class", href: "/fleet?category=sedan" },
+                                { name: "First Class", href: "/fleet?category=first" },
+                                { name: "Business Van/SUV", href: "/fleet?category=van&type=suv" },
+                                { name: "Luxury Sprinter", href: "/fleet?category=van&type=sprinter" },
+                            ].map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="block px-6 py-2.5 text-[10px] uppercase tracking-[2px] text-white/60 hover:text-primary hover:bg-white/5 transition-colors"
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
                     <Link href="/about" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
                         About
+                    </Link>
+
+                    <Link href="/rate-list" className="text-xs lg:text-sm uppercase tracking-widest text-white/80 hover:text-primary transition-colors">
+                        Rate List
                     </Link>
 
                     {user ? (
@@ -119,12 +174,29 @@ export function Header() {
                                         </div>
                                         Home
                                     </Link>
-                                    <Link href="/services" className="flex items-center gap-4 text-lg uppercase tracking-widest text-white/80 hover:text-primary transition-all group">
-                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                            <Briefcase className="w-4 h-4 text-primary" />
+
+                                    {/* Services Mobile */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-4 text-lg uppercase tracking-widest text-white/80 font-bold">
+                                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                                                <Briefcase className="w-4 h-4 text-primary" />
+                                            </div>
+                                            Services
                                         </div>
-                                        Services
-                                    </Link>
+                                        <div className="pl-12 grid grid-cols-1 gap-3">
+                                            {[
+                                                { name: "Airport Transfers", href: "/services/airport" },
+                                                { name: "City to City", href: "/services/city" },
+                                                { name: "Hourly Service", href: "/services/hourly" },
+                                                { name: "All Services", href: "/services" },
+                                            ].map((item) => (
+                                                <Link key={item.name} href={item.href} className="text-sm uppercase tracking-widest text-white/40 hover:text-primary transition-colors">
+                                                    {item.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+
                                     <Link href="/fleet" className="flex items-center gap-4 text-lg uppercase tracking-widest text-white/80 hover:text-primary transition-all group">
                                         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                             <Gem className="w-4 h-4 text-primary" />
@@ -136,6 +208,12 @@ export function Header() {
                                             <User className="w-4 h-4 text-primary" />
                                         </div>
                                         About
+                                    </Link>
+                                    <Link href="/rate-list" className="flex items-center gap-4 text-lg uppercase tracking-widest text-white/80 hover:text-primary transition-all group">
+                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                            <Globe className="w-4 h-4 text-primary" />
+                                        </div>
+                                        Rate List
                                     </Link>
                                 </div>
                             </div>

@@ -40,32 +40,46 @@ export function VehicleStep({ bookingData, onSelect }: VehicleStepProps) {
     const vehicles = [
         {
             id: "sedan",
-            name: "Business Class",
-            model: "Mercedes-Benz E-Class, BMW 5 Series",
+            name: "TC Sedan",
+            model: "Tesla, Standard Sedans",
             capacity: 3,
-            luggage: 2,
+            luggage: 3,
             image: "/assets/images/business_class_sedan.png",
-            features: ["Professional Chauffeur", "Free WiFi", "Bottled Water"]
+            features: ["Free 5G Wi-Fi", "Chilled Water Bottles", "Professional Chauffeur"]
         },
         {
-            id: "van",
-            name: "Business Van/SUV",
-            model: "Mercedes-Benz V-Class, Cadillac Escalade",
-            capacity: 5,
-            luggage: 6,
+            id: "suv",
+            name: "Full-Size SUV",
+            model: "Escalade, Navigator",
+            capacity: "5-6",
+            luggage: 5,
             image: "/assets/images/business_van.png",
-            features: ["Spacious Interior", "Free WiFi", "Group Travel"]
+            features: ["Free 5G Wi-Fi", "Chilled Water Bottles", "Professional Chauffeur"],
+            note: "SUVs can accommodate 6 passengers only if there is zero luggage. If luggage is present, the cap is 5 passengers."
         },
         {
-            id: "first",
-            name: "First Class",
-            model: "Mercedes-Benz S-Class, BMW 7 Series",
+            id: "s-class",
+            name: "S-Class Sedan",
+            model: "Mercedes-Benz S-Class",
             capacity: 3,
-            luggage: 2,
+            luggage: 3,
             image: "/assets/images/first_class_sedan.png",
-            features: ["Top-tier Luxury", "Heated Seats", "Premium Refreshments"]
+            features: ["Free 5G Wi-Fi", "Chilled Water Bottles", "Professional Chauffeur"]
+        },
+        {
+            id: "sprinter",
+            name: "Sprinter Van",
+            model: "Mercedes Sprinter",
+            capacity: 11,
+            luggage: 11,
+            image: "/assets/images/business_van.png",
+            features: ["Free 5G Wi-Fi", "Chilled Water Bottles", "Professional Chauffeur"]
         }
     ];
+
+    const filteredVehicles = vehicles.filter(v =>
+        !bookingData.vehicleCategory || bookingData.vehicleCategory === v.id
+    );
 
     if (error) {
         return (
@@ -83,7 +97,7 @@ export function VehicleStep({ bookingData, onSelect }: VehicleStepProps) {
             <h2 className="text-3xl font-heading font-bold text-center mb-8">Select Your <span className="text-gold-primary">Vehicle</span></h2>
 
             <div className="grid gap-6">
-                {vehicles.map((v) => {
+                {filteredVehicles.map((v) => {
                     const priceData = prices ? prices[v.id as keyof typeof prices] : null;
                     const price = priceData?.price;
                     const isLoading = isPending || !prices;
@@ -123,12 +137,18 @@ export function VehicleStep({ bookingData, onSelect }: VehicleStepProps) {
                                                 </div>
                                             ) : (
                                                 <div className="flex flex-col">
-                                                    <span className="text-3xl font-bold text-gold-primary tracking-tighter">£{price}</span>
+                                                    <span className="text-3xl font-bold text-gold-primary tracking-tighter">${price}</span>
                                                     <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Inc. VAT & Fees</span>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
+
+                                    {v.note && (
+                                        <p className="text-[10px] text-zinc-500 italic bg-white/5 p-2 rounded-lg border border-white/5">
+                                            * {v.note}
+                                        </p>
+                                    )}
 
                                     <div className="flex items-center gap-6 text-zinc-400">
                                         <div className="flex items-center gap-2">
@@ -141,7 +161,7 @@ export function VehicleStep({ bookingData, onSelect }: VehicleStepProps) {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Wifi className="w-4 h-4 text-gold-primary/60" />
-                                            <span className="text-xs">Free WiFi</span>
+                                            <span className="text-xs">Free 5G Wi-Fi</span>
                                         </div>
                                     </div>
 

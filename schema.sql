@@ -33,6 +33,9 @@ create table bookings (
   status text default 'pending', -- 'pending', 'confirmed', 'completed', 'cancelled'
   customer_details jsonb, -- { "name": "...", "email": "...", "phone": "..." }
   flight_number text,
+  airport_code text,
+  airline text,
+  pickup_method text, -- 'curbside' or 'meet-greet'
   notes text,
   created_at timestamp with time zone default now()
 );
@@ -44,6 +47,7 @@ create policy "Public can insert bookings" on bookings for insert with check (tr
 
 -- SEED DATA
 insert into fleet (name, category, description, base_rate, per_km_rate, per_hour_rate, features, image_url) values
-('Business Class', 'sedan', 'Mercedes-Benz E-Class, BMW 5 Series', 50, 3.0, 60, '{"passengers": 3, "luggage": 2, "wifi": true}', '/assets/images/business_class_sedan.png'),
-('Business Van/SUV', 'van', 'Mercedes-Benz V-Class', 80, 4.5, 90, '{"passengers": 5, "luggage": 6, "wifi": true}', '/assets/images/business_van.png'),
-('First Class', 'first', 'Mercedes-Benz S-Class, BMW 7 Series', 100, 6.0, 120, '{"passengers": 3, "luggage": 2, "water": true}', '/assets/images/first_class_sedan.png');
+('TC Sedan', 'sedan', 'Tesla, Standard Sedans', 50, 3.0, 60, '{"passengers": 3, "luggage": 3, "wifi": true}', '/assets/images/business_class_sedan.png'),
+('Full-Size SUV', 'suv', 'Escalade, Navigator', 80, 4.5, 90, '{"passengers": 6, "luggage": 5, "wifi": true}', '/assets/images/business_van.png'),
+('S-Class Sedan', 's-class', 'Mercedes-Benz S-Class', 100, 6.0, 120, '{"passengers": 3, "luggage": 3, "water": true}', '/assets/images/first_class_sedan.png'),
+('Sprinter Van', 'sprinter', 'Mercedes Sprinter', 120, 7.5, 150, '{"passengers": 11, "luggage": 11, "wifi": true}', '/assets/images/business_van.png');

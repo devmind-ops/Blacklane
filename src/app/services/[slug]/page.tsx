@@ -27,7 +27,7 @@ const services = {
             { title: "Arrival", description: "Your chauffeur tracks your flight." },
             { title: "Transfer", description: "Enjoy a smooth, quiet ride to your destination." }
         ],
-        amenities: ["Free Wi-Fi", "Bottled Water", "Phone Charger", "Daily Press"],
+        amenities: ["Free 5G Wi-Fi", "Bottled Water", "Phone Charger", "Daily Press"],
         faqs: [
             { q: "What happens if my flight is delayed?", a: "We track your flight in real-time and adjust pickup accordingly at no extra cost." },
             { q: "Where do I meet my driver?", a: "Your chauffeur will meet you at the arrivals hall with a name sign." }
@@ -111,7 +111,7 @@ const services = {
             { title: "Execution", description: "On-time pickups and efficient routing." },
             { title: "Reporting", description: "Clear documentation for expense tracking." }
         ],
-        amenities: ["Financial Times", "Stable Wi-Fi", "Privacy Tint", "Power Outlets"],
+        amenities: ["Financial Times", "Stable 5G Wi-Fi", "Privacy Tint", "Power Outlets"],
         faqs: [
             { q: "Do you offer corporate accounts?", a: "Yes, we provide specialized billing and priority booking for corporate partners." },
             { q: "Can you handle multi-car roadshows?", a: "Absolutely, we specialize in coordinating large fleets for executive tours." }

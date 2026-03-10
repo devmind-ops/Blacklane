@@ -47,7 +47,7 @@ function BookingWidgetContent() {
 
     const searchParams = useSearchParams();
     const router = useRouter();
-    const [bookingType, setBookingType] = useState<"one-way" | "hourly">("one-way");
+    const [bookingType, setBookingType] = useState<string>("one-way");
     const [isPending, startTransition] = useTransition();
     const [step, setStep] = useState<"search" | "confirm" | "success">("search");
 
@@ -55,14 +55,29 @@ function BookingWidgetContent() {
     const [pickup, setPickup] = useState("");
     const [dropoff, setDropoff] = useState("");
     const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
+    const [time, setTime] = useState(""); // Stores HH:mm (24h format)
+
+    // Custom Time Picker State
+    const [selectedHour, setSelectedHour] = useState("12");
+    const [selectedMinute, setSelectedMinute] = useState("00");
+    const [selectedPeriod, setSelectedPeriod] = useState("PM");
+
+    // Sync custom picker to 24h 'time' state
+    useEffect(() => {
+        let hour = parseInt(selectedHour);
+        if (selectedPeriod === "PM" && hour !== 12) hour += 12;
+        if (selectedPeriod === "AM" && hour === 12) hour = 0;
+        const timeString = `${hour.toString().padStart(2, '0')}:${selectedMinute}`;
+        setTime(timeString);
+    }, [selectedHour, selectedMinute, selectedPeriod]);
+
     const [duration, setDuration] = useState("4");
-    const [vehicleCategory, setVehicleCategory] = useState<"sedan" | "van" | "first">("sedan");
+    const [vehicleCategory, setVehicleCategory] = useState<string>("sedan");
 
     // Handle pre-selected vehicle from URL
     useEffect(() => {
         const vehicle = searchParams.get("vehicle");
-        if (vehicle === "sedan" || vehicle === "van" || vehicle === "first") {
+        if (vehicle === "sedan" || vehicle === "suv" || vehicle === "s-class" || vehicle === "sprinter") {
             setVehicleCategory(vehicle as any);
         }
     }, [searchParams]);
@@ -80,20 +95,41 @@ function BookingWidgetContent() {
     const [customerEmail, setCustomerEmail] = useState("");
     const [customerPhone, setCustomerPhone] = useState("");
 
-    const handleSearch = () => {
-        if (!pickup || (bookingType === 'one-way' && !dropoff) || !date || !time) {
-            alert("Please fill in all search details.");
+    const handleSearch = (mode: 'quote' | 'book') => {
+        const isHourly = bookingType === 'hourly';
+        const isAirportArrival = bookingType === 'airport-arrival';
+        const isAirportDeparture = bookingType === 'airport-departure';
+        const isPointToPoint = bookingType === 'point-to-point';
+        const isOneWay = bookingType === 'one-way';
+        const isRoundTrip = bookingType === 'round-trip';
+
+        // Pickup is always required
+        if (!pickup) {
+            alert("Please provide a pickup location.");
+            return;
+        }
+
+        // Dropoff is required for everything except Hourly
+        if (!isHourly && !dropoff) {
+            alert("Please provide a drop-off location.");
+            return;
+        }
+
+        // Date and Time are always required
+        if (!date || !time) {
+            alert("Please select a date and time.");
             return;
         }
 
         const params = new URLSearchParams({
             pickup,
-            dropoff: bookingType === 'one-way' ? dropoff : 'As Directed',
+            dropoff: isHourly ? 'As Directed' : dropoff,
             date,
             time,
             type: bookingType,
             vehicle: vehicleCategory,
-            duration: bookingType === 'hourly' ? duration : ""
+            duration: isHourly ? duration : "",
+            mode: mode
         });
 
         startTransition(() => {
@@ -161,24 +197,24 @@ function BookingWidgetContent() {
             <CardContent className="space-y-6 pt-4">
                 {step === "search" ? (
                     <>
-                        <div className="flex bg-white/5 p-1 rounded-md border border-white/10">
-                            {["one-way", "hourly"].map((type) => (
-                                <button
-                                    key={type}
-                                    onClick={() => setBookingType(type as any)}
-                                    className={cn(
-                                        "flex-1 py-3 px-4 rounded-sm text-sm font-medium transition-all duration-300 capitalize",
-                                        bookingType === type
-                                            ? "bg-primary text-black font-bold shadow-lg"
-                                            : "text-muted-foreground hover:text-white"
-                                    )}
-                                >
-                                    {type.replace("-", " ")}
-                                </button>
-                            ))}
-                        </div>
-
                         <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Service Type</Label>
+                                <Select value={bookingType} onValueChange={(v) => setBookingType(v)}>
+                                    <SelectTrigger className="w-full bg-white/5 border-white/10 text-white h-12 focus:ring-primary">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-black border-white/10 text-white">
+                                        <SelectItem value="one-way">One Way</SelectItem>
+                                        <SelectItem value="round-trip">Round Trip</SelectItem>
+                                        <SelectItem value="airport-departure">Airport Departure</SelectItem>
+                                        <SelectItem value="point-to-point">Point-to-Point Transfer</SelectItem>
+                                        <SelectItem value="hourly">Hourly (As Directed)</SelectItem>
+                                        <SelectItem value="airport-arrival">Airport Arrival</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
                             <div className="space-y-2">
                                 <Label className="text-xs uppercase tracking-widest text-muted-foreground">Vehicle Class</Label>
                                 <Select value={vehicleCategory} onValueChange={(v: any) => setVehicleCategory(v)}>
@@ -186,9 +222,10 @@ function BookingWidgetContent() {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="bg-black border-white/10 text-white">
-                                        <SelectItem value="sedan">Business Class Sedan</SelectItem>
-                                        <SelectItem value="van">Business Van/SUV</SelectItem>
-                                        <SelectItem value="first">First Class Sedan</SelectItem>
+                                        <SelectItem value="sedan">TC Sedan</SelectItem>
+                                        <SelectItem value="suv">Full-Size SUV</SelectItem>
+                                        <SelectItem value="s-class">S-Class Sedan</SelectItem>
+                                        <SelectItem value="sprinter">Sprinter Van</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -218,7 +255,7 @@ function BookingWidgetContent() {
                                 </div>
                             </div>
 
-                            {bookingType === "one-way" && (
+                            {['one-way', 'round-trip', 'point-to-point', 'airport-departure', 'airport-arrival'].includes(bookingType) && (
                                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <Label className="text-xs uppercase tracking-widest text-muted-foreground">Drop-off Location</Label>
                                     <div className="relative">
@@ -273,22 +310,57 @@ function BookingWidgetContent() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs uppercase tracking-widest text-muted-foreground">Time</Label>
-                                    <Input
-                                        type="time"
-                                        value={time}
-                                        onChange={(e) => setTime(e.target.value)}
-                                        className="bg-white/5 border-white/10 text-white h-12 [color-scheme:dark]"
-                                    />
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <Select value={selectedHour} onValueChange={setSelectedHour}>
+                                            <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
+                                                <SelectValue placeholder="Hr" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-white/10 text-white max-h-[200px]">
+                                                {Array.from({ length: 12 }, (_, i) => (i + 1).toString()).map(h => (
+                                                    <SelectItem key={h} value={h.padStart(2, '0')}>{h}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <Select value={selectedMinute} onValueChange={setSelectedMinute}>
+                                            <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
+                                                <SelectValue placeholder="Min" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-white/10 text-white max-h-[200px]">
+                                                {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map(m => (
+                                                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                                            <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
+                                                <SelectValue placeholder="AM/PM" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-white/10 text-white">
+                                                <SelectItem value="AM">AM</SelectItem>
+                                                <SelectItem value="PM">PM</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <Button
-                                onClick={handleSearch}
-                                loading={isPending}
-                                className="w-full bg-gold-gradient text-black font-bold h-14 uppercase tracking-widest hover:scale-[1.02] transition-all duration-300 mt-4"
-                            >
-                                Calculate Price
-                            </Button>
+                            <div className="grid grid-cols-2 gap-4 mt-4">
+                                <Button
+                                    onClick={() => handleSearch('quote')}
+                                    loading={isPending}
+                                    variant="outline"
+                                    className="w-full border-white/10 text-white font-bold h-14 uppercase tracking-widest hover:bg-white/5 transition-all duration-300"
+                                >
+                                    Calculate Price
+                                </Button>
+                                <Button
+                                    onClick={() => handleSearch('book')}
+                                    loading={isPending}
+                                    className="w-full bg-gold-gradient text-black font-bold h-14 uppercase tracking-widest hover:scale-[1.02] transition-all duration-300"
+                                >
+                                    Book Now
+                                </Button>
+                            </div>
                         </div>
                     </>
                 ) : (
@@ -296,10 +368,10 @@ function BookingWidgetContent() {
                         <div className="bg-white/5 p-4 rounded-lg border border-primary/20 space-y-2">
                             <div className="flex justify-between items-end">
                                 <span className="text-sm text-muted-foreground uppercase tracking-wider">Estimated Total</span>
-                                <span className="text-3xl font-bold text-primary">£{tripDetails?.price}</span>
+                                <span className="text-3xl font-bold text-primary">${tripDetails?.price}</span>
                             </div>
                             <div className="flex justify-between text-xs text-gray-400">
-                                <span>{bookingType === 'one-way' ? `${tripDetails?.distance} km` : `${duration} hours`}</span>
+                                <span>{bookingType === 'hourly' ? `${duration} hours` : `${tripDetails?.distance} km`}</span>
                                 <span>~{tripDetails?.duration} mins total</span>
                             </div>
                         </div>

@@ -10,27 +10,47 @@ export async function calculateTripPrice(
     dropoff: string,
     date: string,
     time: string,
-    vehicleCategory: 'sedan' | 'van' | 'first',
-    bookingType: 'one-way' | 'hourly',
-    durationHours?: number
+    vehicleCategory: string,
+    bookingType: string,
+    durationHours?: number,
+    extraFees: number = 0
 ) {
     try {
         const supabase = await createClient();
+
+        // Map frontend categories to database categories
+        const categoryMap: Record<string, string> = {
+            'sedan': 'sedan',
+            'suv': 'van',
+            's-class': 'first',
+            'sprinter': 'van'
+        };
+
+        const dbCategory = categoryMap[vehicleCategory] || vehicleCategory;
+
         // 1. Fetch fleet rates from DB
-        const { data: fleet, error: fleetError } = await supabase
-            .from("fleet")
-            .select("*")
-            .eq("category", vehicleCategory)
-            .single();
-        // ... (rest of the logic remains the same)
-        if (fleetError || !fleet) {
+        let query = supabase.from("fleet").select("*").eq("category", dbCategory);
+
+        // Disambiguate if category is shared (e.g., 'van' is used for SUV and Sprinter)
+        if (vehicleCategory === 'suv') {
+            query = query.ilike('name', '%SUV%');
+        } else if (vehicleCategory === 'sprinter') {
+            query = query.ilike('name', '%Sprinter%');
+        }
+
+        const { data: fleetArray, error: fleetError } = await query;
+
+        if (fleetError || !fleetArray || fleetArray.length === 0) {
             console.error("Fleet lookup failed:", fleetError);
             return { error: "Vehicle type not found" };
         }
 
+        // Use the first match (should be unique after filtering)
+        const fleet = fleetArray[0];
+
         if (bookingType === 'hourly') {
             if (!durationHours) return { error: "Duration required for hourly booking" };
-            const price = durationHours * fleet.per_hour_rate;
+            const price = (durationHours * fleet.per_hour_rate) + extraFees;
             return {
                 price: Math.round(price),
                 duration: durationHours * 60, // minutes
@@ -50,7 +70,7 @@ export async function calculateTripPrice(
                 destinations: [dropoff],
                 key: process.env.GOOGLE_MAPS_API_KEY,
             },
-            timeout: 1000,
+            timeout: 5000,
         });
 
         if (response.data.rows[0].elements[0].status !== "OK") {
@@ -60,10 +80,17 @@ export async function calculateTripPrice(
         const distanceKm = response.data.rows[0].elements[0].distance.value / 1000;
         const durationMins = response.data.rows[0].elements[0].duration.value / 60;
 
-        const price = fleet.base_rate + (distanceKm * fleet.per_km_rate);
+        let basePrice = fleet.base_rate + (distanceKm * fleet.per_km_rate);
+
+        // Multiplier for Round Trip (simple approximation: 1.8x)
+        if (bookingType === 'round-trip') {
+            basePrice *= 1.8;
+        }
+
+        const finalPrice = basePrice + extraFees;
 
         return {
-            price: Math.round(price),
+            price: Math.round(finalPrice),
             distance: distanceKm.toFixed(1),
             duration: Math.round(durationMins),
             vehicleId: fleet.id
@@ -80,7 +107,7 @@ export async function createBooking(bookingData: {
     dropoff_location?: string;
     pickup_time: string;
     vehicle_id: string;
-    booking_type: 'one-way' | 'hourly';
+    booking_type: string;
     duration_hours?: number;
     calculated_price: number;
     customer_details: {
@@ -89,6 +116,9 @@ export async function createBooking(bookingData: {
         phone: string;
     },
     flight_number?: string;
+    airport_code?: string;
+    airline?: string;
+    pickup_method?: string;
     notes?: string;
 }) {
     try {
@@ -104,11 +134,14 @@ export async function createBooking(bookingData: {
             .select()
             .single();
 
-        if (error) throw error;
+        if (error) {
+            console.error("Supabase insert error:", error);
+            return { error: `Database error: ${error.message} (${error.code})`, details: error };
+        }
         return { success: true, bookingId: data.id };
-    } catch (e) {
-        console.error("Booking creation failed:", e);
-        return { error: "Failed to create booking" };
+    } catch (e: any) {
+        console.error("Booking creation exception:", e);
+        return { error: `Exception: ${e.message || "Unknown error"}` };
     }
 }
 
@@ -145,11 +178,11 @@ export async function calculateAllVehiclePrices(
     dropoff: string,
     date: string,
     time: string,
-    bookingType: 'one-way' | 'hourly',
+    bookingType: string,
     durationHours?: number
 ) {
     try {
-        const categories: ('sedan' | 'van' | 'first')[] = ['sedan', 'van', 'first'];
+        const categories = ['sedan', 'suv', 's-class', 'sprinter'];
 
         const results = await Promise.all(
             categories.map(category =>
@@ -159,8 +192,9 @@ export async function calculateAllVehiclePrices(
 
         return {
             sedan: results[0],
-            van: results[1],
-            first: results[2]
+            suv: results[1],
+            "s-class": results[2],
+            sprinter: results[3]
         };
     } catch (e) {
         console.error("Bulk price calculation failed:", e);

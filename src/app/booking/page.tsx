@@ -10,6 +10,35 @@ import { VehicleStep } from "@/components/booking/VehicleStep";
 import { DetailsStep } from "@/components/booking/DetailsStep";
 import { CheckoutStep } from "@/components/booking/CheckoutStep";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { calculateTripPrice } from "@/actions/booking";
+
+const DEFAULT_VEHICLES = {
+    sedan: {
+        id: "sedan",
+        name: "TC Sedan",
+        model: "Tesla Model S, Standard Sedans",
+        image: "/assets/images/business_class_sedan.png",
+    },
+    suv: {
+        id: "suv",
+        name: "Full-Size SUV",
+        model: "Cadillac Escalade, Lincoln Navigator",
+        image: "/assets/images/business_van.png",
+    },
+    "s-class": {
+        id: "s-class",
+        name: "S-Class Sedan",
+        model: "Mercedes-Benz S-Class",
+        image: "/assets/images/first_class_sedan.png",
+    },
+    sprinter: {
+        id: "sprinter",
+        name: "Sprinter Van",
+        model: "Mercedes Sprinter",
+        image: "/assets/images/business_van.png",
+    }
+};
 
 function BookingPageContent() {
     const searchParams = useSearchParams();
@@ -33,11 +62,51 @@ function BookingPageContent() {
         notes: ""
     });
 
+    const [isInitializing, setIsInitializing] = useState(false);
+    const [initializationError, setInitializationError] = useState<string | null>(null);
+
     useEffect(() => {
         if (!bookingData.pickup || !bookingData.date) {
             router.push("/");
+            return;
         }
-    }, [bookingData, router]);
+
+        const mode = searchParams.get("mode");
+        if (mode === "book" && step === 1) {
+            setStep(2);
+        }
+
+        // Only initialize if mode is "book" AND we don't have a vehicle AND we're not already initializing OR have an error
+        if (mode === "book" && !bookingData.selectedVehicle && !isInitializing && !initializationError) {
+            setIsInitializing(true);
+            const category = bookingData.vehicleCategory as keyof typeof DEFAULT_VEHICLES;
+            const vehicleBase = DEFAULT_VEHICLES[category] || DEFAULT_VEHICLES.sedan;
+
+            calculateTripPrice(
+                bookingData.pickup,
+                bookingData.dropoff,
+                bookingData.date,
+                bookingData.time,
+                category,
+                bookingData.type,
+                bookingData.duration ? parseInt(bookingData.duration) : undefined
+            ).then(priceData => {
+                if (priceData.error) {
+                    setInitializationError(priceData.error);
+                } else {
+                    setBookingData((prev: any) => ({
+                        ...prev,
+                        selectedVehicle: { ...vehicleBase, ...priceData }
+                    }));
+                }
+                setIsInitializing(false);
+            }).catch(err => {
+                console.error("Initialization failed:", err);
+                setInitializationError("Failed to calculate trip details. Please try again.");
+                setIsInitializing(false);
+            });
+        }
+    }, [bookingData.pickup, bookingData.date, searchParams, router, step, bookingData.selectedVehicle, isInitializing, bookingData.vehicleCategory, bookingData.dropoff, bookingData.time, bookingData.type, bookingData.duration, initializationError]);
 
     const nextStep = () => setStep(prev => Math.min(prev + 1, 3));
     const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
@@ -55,43 +124,68 @@ function BookingPageContent() {
 
                     <BookingSteps currentStep={step} />
 
-                    <BookingSummary
-                        pickup={bookingData.pickup}
-                        dropoff={bookingData.dropoff}
-                        date={bookingData.date}
-                        time={bookingData.time}
-                        onEdit={() => router.push("/")}
-                    />
-
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {step === 1 && (
-                            <VehicleStep
-                                bookingData={bookingData}
-                                onSelect={(vehicle: any) => {
-                                    setBookingData({ ...bookingData, selectedVehicle: vehicle });
-                                    nextStep();
-                                }}
+                    {isInitializing ? (
+                        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                            <Loader2 className="w-12 h-12 text-gold-primary animate-spin" />
+                            <p className="text-zinc-500 uppercase tracking-widest text-xs font-bold">Initializing Luxury Experience...</p>
+                        </div>
+                    ) : initializationError ? (
+                        <div className="flex flex-col items-center justify-center py-20 space-y-6 text-center">
+                            <div className="p-4 bg-red-500/10 rounded-full">
+                                <Loader2 className="w-10 h-10 text-red-500" />
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-bold">Something went wrong</h3>
+                                <p className="text-zinc-400 max-w-sm">{initializationError}</p>
+                            </div>
+                            <Button
+                                onClick={() => router.push("/")}
+                                className="bg-white/10 hover:bg-white/20 text-white"
+                            >
+                                Back to Search
+                            </Button>
+                        </div>
+                    ) : (
+                        <>
+                            <BookingSummary
+                                pickup={bookingData.pickup}
+                                dropoff={bookingData.dropoff}
+                                date={bookingData.date}
+                                time={bookingData.time}
+                                onEdit={() => router.push("/")}
                             />
-                        )}
 
-                        {step === 2 && (
-                            <DetailsStep
-                                bookingData={bookingData}
-                                onBack={prevStep}
-                                onContinue={(details: any) => {
-                                    setBookingData({ ...bookingData, ...details });
-                                    nextStep();
-                                }}
-                            />
-                        )}
+                            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                {step === 1 && searchParams.get("mode") !== "book" && (
+                                    <VehicleStep
+                                        bookingData={bookingData}
+                                        onSelect={(vehicle: any) => {
+                                            setBookingData({ ...bookingData, selectedVehicle: vehicle });
+                                            nextStep();
+                                        }}
+                                    />
+                                )}
 
-                        {step === 3 && (
-                            <CheckoutStep
-                                bookingData={bookingData}
-                                onBack={prevStep}
-                            />
-                        )}
-                    </div>
+                                {step === 2 && (
+                                    <DetailsStep
+                                        bookingData={bookingData}
+                                        onBack={prevStep}
+                                        onContinue={(details: any) => {
+                                            setBookingData({ ...bookingData, ...details });
+                                            nextStep();
+                                        }}
+                                    />
+                                )}
+
+                                {step === 3 && (
+                                    <CheckoutStep
+                                        bookingData={bookingData}
+                                        onBack={prevStep}
+                                    />
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
 
