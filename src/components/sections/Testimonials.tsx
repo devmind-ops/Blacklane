@@ -33,7 +33,7 @@ export function Testimonials() {
     }, []);
 
     return (
-        <section id="testimonials" className="py-24 bg-zinc-950 text-white relative border-t border-white/5">
+        <section id="testimonials" className="py-20 bg-zinc-950/50 text-white relative border-t border-white/5">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-dark/5 via-transparent to-transparent pointer-events-none" />
 
             <div className="container mx-auto px-6 text-center">

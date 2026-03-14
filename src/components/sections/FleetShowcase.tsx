@@ -5,7 +5,7 @@ export function FleetShowcase() {
     return (
         <section
             id="fleet"
-            className="relative py-32 bg-fixed bg-cover bg-center flex items-center justify-center"
+            className="relative py-28 bg-fixed bg-cover bg-center flex items-center justify-center"
             style={{ backgroundImage: "url('/assets/images/luxury_fleet_lineup_1770699971769.png')" }}
         >
             <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />

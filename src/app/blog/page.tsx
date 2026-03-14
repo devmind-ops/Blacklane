@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 
@@ -9,19 +10,22 @@ const posts = [
         title: "The Ultimate Guide to Luxury Airport Transfers",
         excerpt: "Why booking a chauffeur is more than just a ride - it's an investment in your peace of mind.",
         date: "Oct 12, 2023",
-        slug: "ultimate-guide-airport-transfers"
+        slug: "ultimate-guide-airport-transfers",
+        image: "/assets/images/hero_widget_initial_1770746805776.png"
     },
     {
         title: "Top 5 Destinations for Winter 2024",
         excerpt: "Our curated list of the most exclusive winter getaways accessible by our long-distance fleet.",
         date: "Sep 28, 2023",
-        slug: "winter-destinations-2024"
+        slug: "winter-destinations-2024",
+        image: "/assets/images/luxury_chauffeur_hero_1770699554633.png"
     },
     {
         title: "Behind the Scenes: Maintaining a Premium Fleet",
         excerpt: "How we ensure every vehicle meets the highest standards of safety and cleanliness.",
         date: "Sep 15, 2023",
-        slug: "maintaining-premium-fleet"
+        slug: "maintaining-premium-fleet",
+        image: "/assets/images/luxury_fleet_lineup_1770699971769.png"
     }
 ];
 
@@ -38,10 +42,14 @@ export default function BlogPage() {
             <section className="container mx-auto px-6 pb-24 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {posts.map((post, index) => (
                     <Link key={index} href={`/blog/${post.slug}`} className="group">
-                        <Card className="bg-zinc-900 border-white/5 overflow-hidden hover:border-gold-primary transition-colors">
-                            <div className="h-48 bg-zinc-800 w-full relative">
-                                {/* Placeholder for blog image */}
-                                <div className="absolute inset-0 flex items-center justify-center text-white/20 text-sm">[Feature Image]</div>
+                        <Card className="bg-zinc-900 border-white/5 overflow-hidden hover:border-gold-primary transition-colors h-full flex flex-col">
+                            <div className="aspect-[16/9] w-full relative overflow-hidden bg-zinc-800">
+                                <Image
+                                    src={post.image}
+                                    alt={post.title}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
                             </div>
                             <CardContent className="p-6">
                                 <div className="flex items-center gap-2 text-xs text-gold-primary uppercase tracking-widest mb-3">

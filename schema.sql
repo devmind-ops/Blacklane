@@ -51,3 +51,20 @@ insert into fleet (name, category, description, base_rate, per_km_rate, per_hour
 ('Full-Size SUV', 'suv', 'Escalade, Navigator', 80, 4.5, 90, '{"passengers": 6, "luggage": 5, "wifi": true}', '/assets/images/business_van.png'),
 ('S-Class Sedan', 's-class', 'Mercedes-Benz S-Class', 100, 6.0, 120, '{"passengers": 3, "luggage": 3, "water": true}', '/assets/images/first_class_sedan.png'),
 ('Sprinter Van', 'sprinter', 'Mercedes Sprinter', 120, 7.5, 150, '{"passengers": 11, "luggage": 11, "wifi": true}', '/assets/images/business_van.png');
+
+-- CONTACT INQUIRIES TABLE
+create table contact_inquiries (
+  id uuid primary key default uuid_generate_v4(),
+  full_name text not null,
+  email text not null,
+  phone text,
+  subject text,
+  message text not null,
+  status text default 'new', -- 'new', 'in-progress', 'resolved'
+  created_at timestamp with time zone default now()
+);
+
+-- RLS for Contact Inquiries
+alter table contact_inquiries enable row level security;
+create policy "Public can insert contact inquiries" on contact_inquiries for insert with check (true);
+create policy "Admin can view contact inquiries" on contact_inquiries for select using (auth.jwt()->>'role' = 'service_role' or (exists (select 1 from profiles where profiles.id = auth.uid() and profiles.tier = 'Admin')));

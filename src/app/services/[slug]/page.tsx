@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { getFleet } from "@/actions/fleet";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { FaqAccordion } from "@/components/ui/FaqAccordion";
 
 export const dynamic = 'force-dynamic';
 
@@ -407,24 +408,12 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
             {/* FAQ Section */}
             <section className="py-32 bg-zinc-950">
-                <div className="container mx-auto px-6 max-w-3xl">
+                <div className="container mx-auto px-6 max-w-4xl">
                     <div className="text-center mb-20">
                         <h2 className="text-gold-primary text-sm font-bold uppercase tracking-[0.4em] mb-4">Questions</h2>
-                        <h3 className="text-4xl font-heading font-bold">Common Queries</h3>
+                        <h3 className="text-4xl md:text-5xl font-heading font-bold">Common Queries</h3>
                     </div>
-                    <div className="space-y-8">
-                        {service.faqs?.map((faq, i) => (
-                            <div key={i} className="group border-b border-white/10 pb-8">
-                                <h4 className="text-2xl font-heading font-bold mb-4 group-hover:text-gold-primary transition-colors cursor-pointer flex justify-between items-center">
-                                    {faq.q}
-                                    <span className="text-gold-primary">+</span>
-                                </h4>
-                                <p className="text-gray-400 font-light leading-relaxed">
-                                    {faq.a}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    {service.faqs && <FaqAccordion items={service.faqs} />}
                 </div>
             </section>
 

@@ -18,7 +18,7 @@ const values = [
 
 export function ValuesSection() {
     return (
-        <section id="about" className="py-24 bg-black text-white overflow-hidden relative">
+        <section id="about" className="py-20 bg-zinc-950/30 text-white overflow-hidden relative border-y border-white/[0.02]">
             <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
                 {/* Image Side */}

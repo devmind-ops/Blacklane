@@ -55,7 +55,7 @@ const services = [
 
 export function ServiceGrid() {
     return (
-        <section id="services" className="py-24 bg-zinc-950 text-white relative">
+        <section id="services" className="py-20 bg-zinc-950 text-white relative">
             <div className="container mx-auto px-6">
 
                 <div className="text-center mb-16">
